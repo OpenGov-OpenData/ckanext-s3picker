@@ -1,0 +1,4 @@
+mock
+moto[s3]>=5,<6
+pytest-ckan
+pytest-cov
