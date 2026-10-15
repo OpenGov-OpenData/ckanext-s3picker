@@ -1,0 +1,8 @@
+s3picker-js:
+  output: ckanext-s3picker/%(version)s_s3picker.js
+  contents:
+    - s3picker.js
+s3picker-css:
+  output: ckanext-s3picker/%(version)s_s3picker.css
+  contents:
+    - s3picker.css

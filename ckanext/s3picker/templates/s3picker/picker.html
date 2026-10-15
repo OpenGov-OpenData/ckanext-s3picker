@@ -1,0 +1,63 @@
+{% extends "page.html" %}
+
+{% block subtitle %}{{ catalog.title }}{% endblock %}
+
+{% block breadcrumb_content %}
+  <li class="active"><a href="{{ h.url_for('s3picker.picker', catalog=catalog.slug) }}">{{ catalog.title }}</a></li>
+{% endblock %}
+
+{% block secondary %}{% endblock %}
+
+{% block primary %}
+<div class="primary col-xs-12 col-sm-12" role="main">
+  <article class="module">
+    <div class="module-content">
+      <h1 class="page-heading">{{ catalog.title }}</h1>
+      {% if catalog.description %}
+        <p>{{ catalog.description }}</p>
+      {% endif %}
+
+      {% if not root %}
+        <div class="alert alert-info">{{ _('This catalog has not been indexed yet.') }}</div>
+      {% else %}
+        <div class="s3picker-summary">
+          <p class="s3picker-stats">{{ _('{count} files · {size} total').format(count=h.s3picker_number(root.file_count), size=h.s3picker_filesize(root.size)) }}</p>
+          <p class="s3picker-hint">{{ _('Select files or folders, then click "Get download links". Up to {max} files per request.').format(max=h.s3picker_number(max_files)) }}</p>
+        </div>
+
+        <div id="s3picker" class="s3picker"
+             data-browse-url="{{ h.url_for('s3picker.browse', catalog=catalog.slug) }}"
+             data-matches-url="{{ h.url_for('s3picker.matches', catalog=catalog.slug) }}"
+             data-download-url="{{ h.url_for('s3picker.download', catalog=catalog.slug) }}"
+             data-max-files="{{ max_files }}"
+             data-private="{{ 'true' if catalog.private else 'false' }}"
+             data-root-name="{{ catalog.title }}"
+             data-root-count="{{ root.file_count }}"
+             data-root-size="{{ root.size }}">
+          <div class="s3picker-toolbar">
+            <input type="search" class="form-control s3picker-search"
+                   placeholder="{{ _('Search file names and paths') }}"
+                   aria-label="{{ _('Search file names and paths') }}">
+          </div>
+
+          <div class="s3picker-tree" role="tree" aria-label="{{ _('Files') }}"></div>
+          <div class="s3picker-search-results" hidden></div>
+
+          <div class="s3picker-footer">
+            <span class="s3picker-total" aria-live="polite"></span>
+            <span class="s3picker-actions">
+              <button type="button" class="btn btn-default s3picker-clear" disabled>{{ _('Clear selection') }}</button>
+              <button type="button" class="btn btn-primary s3picker-get-links" disabled>{{ _('Get download links') }}</button>
+            </span>
+          </div>
+
+          <div class="s3picker-message" role="alert" hidden></div>
+          <div class="s3picker-results" hidden></div>
+        </div>
+      {% endif %}
+    </div>
+  </article>
+</div>
+{% asset 'ckanext-s3picker/s3picker-css' %}
+{% asset 'ckanext-s3picker/s3picker-js' %}
+{% endblock %}
